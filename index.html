@@ -29,12 +29,50 @@
                            <input type="text" class="form-control text-center" value="1">
                            <button class="btn btn-default btnplus"><i class="fas fa-plus "></i></button>
                         </div>
-                        <h5>$<span class="price">1500</span><span class="prices"></span></h5>
+                        <h5>$<span class="price">1,500</span><span class="prices"></span></h5>
                         <img src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
                </div>
 
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item">
+                        <img src="images/product-1.png" alt="">
+                        <h5>iPhone 11 128GB Black</h5>
+                     </div>
+
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button class="btn btn-default btnminus"><i class="fas fa-minus "></i></button>
+                           <input type="text" class="form-control text-center" value="1">
+                           <button class="btn btn-default btnplus"><i class="fas fa-plus "></i></button>
+                        </div>
+                        <h5>$<span class="price">1,500</span><span class="prices"></span></h5>
+                        <img src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item mx-auto">
+                        <img src="images/product-2.png" alt="">
+                        <h5>iPhone 11 Silicone Case - Black</h5>
+                     </div>
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button class="btn btn-default btnminus"><i class="fas fa-minus "></i></button>
+                           <input type="text" class="form-control text-center" value="1">
+                           <button class="btn btn-default btnplus"><i class="fas fa-plus"></i></button>
+
+                        </div>
+                        <h5>$<span class="price">59</span><span class="prices"></span></h5>
+                        <img src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
                <div class="cart-item">
                   <div class="row">
                      <div class="col-md-7 center-item mx-auto">
@@ -64,9 +102,9 @@
                      </div>
 
                      <div class="col-md-4 status">
-                        <h5>$<span class="subtotal">1559</span></h5>
-                        <h5>$ <span class="tax">780 </span> </h5>
-                        <h5>$<span class="total">1559</span></h5>
+                        <h5>$<span class="subtotal">0</span></h5>
+                        <h5>$ <span class="tax">0</span> </h5>
+                        <h5>$<span class="total">0</span></h5>
                      </div>
                   </div>
                </div>
@@ -80,7 +118,30 @@
    <script>
       const btns=document.querySelectorAll(".btn");
       let subtotal=document.querySelector(".subtotal");
-      let subtotalnum=parseFloat(subtotal.innerText);
+      const subtotalWithoutComma=subtotal.innerText.replace(",","");
+      let subtotalnum=parseFloat(subtotalWithoutComma);
+
+     
+      window.addEventListener("load",function(){
+         const prices=document.querySelectorAll(".price");
+         prices.forEach(function(price){
+               const pricewithoutcomma=price.innerText.replace(",","");
+               iniprice=parseFloat(pricewithoutcomma);
+               subtotalnum+=iniprice;
+         
+      });
+
+      const subtotalwithcomma=thousands_separators( subtotalnum);
+      document.querySelector(".subtotal").innerText=subtotalwithcomma;
+      finalcal(subtotalnum);
+      
+      });
+
+      const tax=document.querySelector(".tax");
+            let taxnumber=parseFloat(tax.innerText);
+            const total=document.querySelector(".total");
+            const totalwithoutcomma=total.innerText.replace(",","");
+            let totalnumber=parseFloat(totalwithoutcomma);
 
       btns.forEach(function(btn){
          btn.addEventListener("click",function(e){
@@ -88,13 +149,11 @@
             let amount=0;
             let minusamount=0; 
             
-            const tax=document.querySelector(".tax");
-            let taxnumber=parseFloat(subtotal.innerText);
-            const total=document.querySelector(".total");
-            let totalnumber=parseFloat(subtotal.innerText);
+           
 
             let price=e.currentTarget.parentElement.nextElementSibling.childNodes[1];
-            let pricenumber=parseFloat(price.innerText);
+            const pricewithoutcomma=price.innerText.replace(",","");
+            let pricenumber=parseFloat(pricewithoutcomma);
             price.style.display="none";
             
             const btnClass = e.currentTarget.classList;
@@ -108,15 +167,13 @@
               
 
                amount=pricenumber*plusnumber;
-               e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= amount;
+               const amountcomma=thousands_separators(amount);
+               e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= amountcomma;
                subtotalnum+=pricenumber;
-               document.querySelector(".subtotal").innerText=subtotalnum;
+               const subtotalcomma=thousands_separators(subtotalnum)
+               document.querySelector(".subtotal").innerText=subtotalcomma;
 
-            //    taxnumber=subtotalnum*.1;
-            //   document.querySelector(".tax").innerText=Math.round(taxnumber);
-            
-            //   totalnumber=subtotalnum+taxnumber;
-            //   document.querySelector(".total").innerText=Math.round(totalnumber);
+
             finalcal(subtotalnum);
 
             }
@@ -137,22 +194,21 @@
                          minusamount=minusnumber*pricenumber;
               
                if(minusamount>0){
-                  e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= minusamount;
+                  const minusamountcomma=thousands_separators(minusamount);
+                  e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= minusamountcomma;
 
                }                
                subtotalnum-=pricenumber;
-               document.querySelector(".subtotal").innerText=subtotalnum;
-            //    taxnumber=subtotalnum*.1;
-            //   document.querySelector(".tax").innerText=Math.round(taxnumber);
-            
-            //   totalnumber=subtotalnum+taxnumber;
-            //   document.querySelector(".total").innerText=Math.round(totalnumber);
+               const subtotalcomma=thousands_separators(subtotalnum);
+               document.querySelector(".subtotal").innerText=subtotalcomma;
+           
                    finalcal(subtotalnum);
                   
                }
                else{
                  minusamount=minusnumber*pricenumber;
-                 e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= pricenumber;
+                 const pricenumbercomma=thousands_separators(pricenumber);
+                 e.currentTarget.parentElement.nextElementSibling.lastChild.innerText= pricenumbercomma;
                   
                  e.currentTarget.disabled=true;
                  
@@ -178,16 +234,18 @@
                   e.currentTarget.parentElement.parentElement.parentElement.style.display="none";
 
                   const initialamount= e.currentTarget.previousElementSibling.childNodes[1].innerText;
-                  const initialamountnum=parseFloat(initialamount);
+                  const initialamountwithoutcomma=initialamount.replace(",","");
+                  const initialamountnum=parseFloat(initialamountwithoutcomma);
                   
 
                   const secondamount= e.currentTarget.previousElementSibling.childNodes[2].innerText;
-                  const secondamountnum=parseFloat(secondamount);
-                  // console.log(secondamountnum);
+                  const secondamountwithoutcomma= secondamount.replace(",","");
+                  const secondamountnum=parseFloat(secondamountwithoutcomma);
+                
 
-                  // const subvalue=e.currentTarget.parentElement.parentElement.parentElement.nextElementSibling.nextElementSibling.lastChild.childNodes[1].childNodes[0].childNodes[1].innerText;
                   const subvalue=document.querySelector(".subtotal").innerText;
-                  const subvaluenum=parseFloat(subvalue);
+                  const subvaluewithoutcomma=subvalue.replace(",","");
+                  const subvaluenum=parseFloat(subvaluewithoutcomma);
 
                   
                  
@@ -199,7 +257,8 @@
                   }
 
                  let final=subvaluenum-subtotalval;
-                 document.querySelector(".subtotal").innerText=final;
+                 let finalcomma=thousands_separators(final);
+                 document.querySelector(".subtotal").innerText=finalcomma;
                  
 
                  finalcal(final);
@@ -213,9 +272,16 @@
               document.querySelector(".tax").innerText=Math.round(taxnumber);
             
               totalnumber=tax+taxnumber;
-              document.querySelector(".total").innerText=Math.round(totalnumber);
+              const totalnumbercomma=thousands_separators(Math.round(totalnumber));
+              document.querySelector(".total").innerText=totalnumbercomma;
 
             }
+            function thousands_separators(num)
+             {
+                   var num_parts = num.toString().split(".");
+                   num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                   return num_parts.join(".");
+  }
    </script>
 </body>
 
